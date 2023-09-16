@@ -1,9 +1,16 @@
-import React from 'react';
-import { Container, Nav, NavDropdown, Navbar } from 'react-bootstrap';
+import React, { useContext } from 'react';
+import { Button, Container, Nav, NavDropdown, Navbar } from 'react-bootstrap';
 import LeftSideNav from '../Shared/LeftSideNav/LeftSideNav';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../../contexts/AuthProvider/AuthProvider';
 
 const Header = () => {
+    const {user,logOut}=useContext(AuthContext);
+    const handleLogOut = () => {
+        logOut()
+            .then(() => { })
+            .catch(error => console.error(error))
+    }
     return (
         <Navbar collapseOnSelect className='mb-4' expand="lg" bg="light" variant="light">
         <Container>
@@ -21,12 +28,25 @@ const Header = () => {
                         <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
                         <NavDropdown.Divider />
                         <NavDropdown.Item href="#action/3.4">
-                            Separated link
+                            Separated links
                         </NavDropdown.Item>
                     </NavDropdown>
                 </Nav>
                 <Nav>
-                    <Nav.Link href="#deets">More deets</Nav.Link>
+                    <Nav.Link href="#deets">
+                    {
+                                user?.uid ?
+                                    <>
+                                        <span>{user?.displayName}</span>
+                                        <Button variant="light" onClick={handleLogOut}>Log out</Button>
+                                    </>
+                                    :
+                                    <>
+                                        <Link to='/login'>Login</Link>
+                                        <Link to='/register'>Register</Link>
+                                    </>
+                            }
+                    </Nav.Link>
                     <Nav.Link eventKey={2} href="#memes">
                         Dank memes
                     </Nav.Link>
